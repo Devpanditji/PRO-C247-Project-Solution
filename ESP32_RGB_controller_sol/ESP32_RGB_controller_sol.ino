@@ -1,46 +1,44 @@
-// To connect with WiFi
+
 #include<WiFi.h>
 
-//  To make our device as server 
+ 
 #include<WebServer.h>
 
-//  ssid , password
+
 const char ssid[] = "Write your wifi ssid";
 const char password[] = "Write your wifi password";
 
-//  RGb led GPIOs
+
 const byte r_pin = 25;
 const byte g_pin = 26;
 const byte b_pin = 27;
 
-//  channel
+
 const byte r_channel = 0;
 const byte g_channel = 1;
 const byte b_channel = 2;
 
-//  frequency and resolution
+
 const int frequency = 5000;
 const int resolution = 8;
 
-//  starting a server at port 80
+
 WebServer server(80);
 
 void setup(){
 
-  //  setting frequency and resolution at channels
+
   ledcSetup(r_channel , frequency , resolution);
   ledcSetup(g_channel , frequency , resolution);
   ledcSetup(b_channel , frequency , resolution);
 
-  //  attaching GPIOs
+
   ledcAttachPin(r_pin , r_channel);
   ledcAttachPin(g_pin , g_channel);
   ledcAttachPin(b_pin , b_channel);
-  
-  //   starting serial communication
+
   Serial.begin(115200);
 
-  //  connecting with the WiFi and printing IP Address
   Serial.print("Connecting with : ");
   Serial.println(ssid);
   WiFi.begin(ssid , password);
@@ -53,7 +51,6 @@ void setup(){
   Serial.print("IP address assgined by the access point : ");
   Serial.println(WiFi.localIP());
 
-  //  Defining APIs
   server.on("/" , handle_root);
   server.on("/red" , handle_red);
   server.on("/green" , handle_green);
@@ -63,10 +60,9 @@ void setup(){
   server.on("/magenta" , handle_magenta);
   server.on("/orange" , handle_orange);
 
-  //  if API not found
+
   server.onNotFound(handle_notfound);
 
-  //  start the server
   server.begin();
   Serial.println("HTTP Server started");
   
@@ -74,113 +70,108 @@ void setup(){
 
 void loop(){
   
-  //  to handle the client requests at APIs
+
   server.handleClient();
 }
 
 void handle_root(){
   
   Serial.println("No Color");
-  //  getting html
+
   String html = generate_html();
-  //  sending response
+
   server.send(200 , "text/html" , html);
 }
 
 void handle_red(){
   
   Serial.println("Red Color");
-  //  getting html
+
   String html = generate_html();
 
-  //  making color
   color_generator(255,0,0);
   
-  //  sending response
+ 
   server.send(200 , "text/html" , html);
 }
 
 void handle_green(){
 
   Serial.println("Green Color");
-  //  getting html
+ 
   String html = generate_html();
 
-  //  making color
+  
   color_generator(0,255,0);
   
-  //  sending response
+  
   server.send(200 , "text/html" , html);
 }
 
 void handle_blue(){
 
   Serial.println("Blue Color");
-  //  getting html
+
   String html = generate_html();
 
-  //  making color
+
   color_generator(0,0,255);
   
-  //  sending response
+
   server.send(200 , "text/html" , html);
 }
 
 void handle_orange(){
 
   Serial.println("Orange Color");
-  //  getting html
+ 
   String html = generate_html();
 
-  //  making color
+
   color_generator(255,147,0);
   
-  //  sending response
+ 
   server.send(200 , "text/html" , html);
 }
 
 void handle_cyan(){
 
   Serial.println("Cyan Color");
-  //  getting html
+ 
   String html = generate_html();
 
-  //  making color
   color_generator(0,255,255);
-  
-  //  sending response
+
   server.send(200 , "text/html" , html);
 }
 
 void handle_magenta(){
 
   Serial.println("Magenta Color");
-  //  getting html
+
   String html = generate_html();
 
-  //  making color
   color_generator(255,0,255);
-  
-  //  sending response
+
   server.send(200 , "text/html" , html);
 }
 
 void handle_yellow(){
 
   Serial.println("Yellow Color");
-  //  getting html
+
   String html = generate_html();
 
-  //  making color
+ 
   color_generator(255,255,0);
   
-  //  sending response
+
   server.send(200 , "text/html" , html);
 }
 
 void handle_notfound(){
 
-  //  sending message
+  
   server.send(200 , "text/plain" , "Can't find anything, please try again!");
 }
 
@@ -192,7 +183,6 @@ void color_generator(byte r , byte g , byte b){
 }
 
 
-//  generating HTML Page
 String generate_html(){
   
   String html = "<!DOCTYPE html>\n";
